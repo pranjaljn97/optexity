@@ -37,6 +37,10 @@ class AutomationState(BaseModel):
     step_index: int = Field(default_factory=lambda: -1)
     try_index: int = Field(default_factory=lambda: -1)
     start_2fa_time: datetime | None = Field(default=None)
+    # Number of deterministic-command actions that failed and fell back to the LLM/prompt
+    # path. Drives convergence in the learning cache loop: 0 means every cached locator
+    # resolved on the fast path (fully hardened automation). See inference/cache.
+    command_fallback_count: int = Field(default=0)
 
     @model_validator(mode="after")
     def validate_start_2fa_time(self):

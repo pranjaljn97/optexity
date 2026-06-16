@@ -67,8 +67,18 @@ async def handle_agentic_task(
         logger.debug(f"Starting browser session for agentic task {browser.cdp_url} ")
         await agent.browser_session.start()
         logger.debug(f"Finally running agentic task on browser_use {browser.cdp_url} ")
-        await agent.run(max_steps=agentic_task_action.max_steps)
+        agent_history = await agent.run(max_steps=agentic_task_action.max_steps)
         logger.debug(f"Agentic task completed on browser_use {browser.cdp_url} ")
+
+        # Capture half of the learning loop: dump what the agent actually did so the
+        # cache compiler can turn it into deterministic automation nodes. See
+        # optexity.inference.cache for the synth side.
+        try:
+            trace_path = step_directory / "trace.json"
+            agent_history.export_deterministic_trace(trace_path)
+            logger.debug(f"Exported deterministic trace to {trace_path}")
+        except Exception as e:
+            logger.warning(f"Failed to export deterministic trace: {e}")
 
         agent.stop()
         if agent.browser_session:

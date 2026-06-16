@@ -1,0 +1,139 @@
+{
+  "browser_channel": "chromium",
+  "backend": "browser-use",
+  "allow_cookies": false,
+  "max_retries": 0,
+  "expected_downloads": 0,
+  "remove_empty_nodes_in_axtree": true,
+  "url": "https://www.roboform.com/filling-test-all-fields",
+  "take_final_screenshot": true,
+  "parameters": {
+    "input_parameters": {},
+    "secure_parameters": {},
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "input_text": {
+          "command": "locator(\"input[name='01___full_name']\")",
+          "prompt_instructions": "Enter full name",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "input_text": "myname",
+          "is_slider": false,
+          "fill_or_type": "fill",
+          "press_enter": false,
+          "click_before_input": true
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "input_text": {
+          "command": "locator(\"input[name='07___address_line1']\")",
+          "prompt_instructions": "Enter address line one",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "input_text": "xyz",
+          "is_slider": false,
+          "fill_or_type": "fill",
+          "press_enter": false,
+          "click_before_input": true
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "input_text": {
+          "command": "locator(\"input[name='08___address_line2']\")",
+          "prompt_instructions": "Enter address line two",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "input_text": "abc",
+          "is_slider": false,
+          "fill_or_type": "fill",
+          "press_enter": false,
+          "click_before_input": true
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "input_text": {
+          "command": "locator(\"input[name='09___city']\")",
+          "prompt_instructions": "Enter the city",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "input_text": "SF",
+          "is_slider": false,
+          "fill_or_type": "fill",
+          "press_enter": false,
+          "click_before_input": true
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "locator(\"#btnSubmit\")",
+          "prompt_instructions": "Click submit",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    }
+  ],
+  "automation_description": "Deterministic cache compiled from a browser-use agentic run.",
+  "post_processing_nodes": []
+}

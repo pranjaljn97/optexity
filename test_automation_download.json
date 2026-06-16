@@ -1,0 +1,20 @@
+{
+  "url": "https://www.africau.edu/images/default/sample.pdf",
+  "expected_downloads": 1,
+  "parameters": {
+    "input_parameters": {},
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "agentic_task": {
+          "task": "find the link to the sample PDF file and click it to download the file",
+          "max_steps": 10,
+          "backend": "browser_use"
+        }
+      }
+    }
+  ]
+}

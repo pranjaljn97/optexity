@@ -220,6 +220,16 @@ async def command_based_action_with_retry(
         f"{action.__class__.__name__} failed after {max_tries} tries: {last_error}"
     )
 
+    # Single funnel for every deterministic-command action type: reaching here means the
+    # cached locator failed and the caller will fall back to the LLM/prompt path. The
+    # learning cache loop watches this counter — 0 fallbacks == fully hardened automation.
+    if not action.skip_prompt:
+        memory.automation_state.command_fallback_count += 1
+        logger.debug(
+            f"command fallback -> LLM for {action.__class__.__name__} "
+            f"(total fallbacks: {memory.automation_state.command_fallback_count})"
+        )
+
     if last_error and action.assert_locator_presence:
         logger.debug(
             f"Error in {action.__class__.__name__} with assert_locator_presence: {action.__class__.__name__}: {last_error}"

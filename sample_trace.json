@@ -1,0 +1,146 @@
+[
+  {
+    "step": 0,
+    "action": "navigate",
+    "params": {
+      "url": "x"
+    },
+    "element": null,
+    "result_ok": true,
+    "error": null,
+    "duration_s": 0.4,
+    "goal": "open",
+    "cacheable": false
+  },
+  {
+    "step": 1,
+    "action": "input",
+    "params": {
+      "text": "WRONG"
+    },
+    "element": {
+      "node_name": "INPUT",
+      "attributes": {
+        "name": "01___full_name",
+        "type": "text"
+      },
+      "ax_name": null,
+      "x_path": "/html/body/form/input[@name='01___full_name']",
+      "stable_hash": 52750
+    },
+    "result_ok": true,
+    "error": null,
+    "duration_s": 1.1,
+    "goal": "Enter full name",
+    "cacheable": true
+  },
+  {
+    "step": 2,
+    "action": "input",
+    "params": {
+      "text": "myname"
+    },
+    "element": {
+      "node_name": "INPUT",
+      "attributes": {
+        "name": "01___full_name",
+        "type": "text"
+      },
+      "ax_name": null,
+      "x_path": "/html/body/form/input[@name='01___full_name']",
+      "stable_hash": 52750
+    },
+    "result_ok": true,
+    "error": null,
+    "duration_s": 0.9,
+    "goal": "Enter full name",
+    "cacheable": true
+  },
+  {
+    "step": 3,
+    "action": "input",
+    "params": {
+      "text": "xyz"
+    },
+    "element": {
+      "node_name": "INPUT",
+      "attributes": {
+        "name": "07___address_line1",
+        "type": "text"
+      },
+      "ax_name": null,
+      "x_path": "/html/body/form/input[@name='07___address_line1']",
+      "stable_hash": 69509
+    },
+    "result_ok": true,
+    "error": null,
+    "duration_s": 0.9,
+    "goal": "Enter address line one",
+    "cacheable": true
+  },
+  {
+    "step": 4,
+    "action": "input",
+    "params": {
+      "text": "abc"
+    },
+    "element": {
+      "node_name": "INPUT",
+      "attributes": {
+        "name": "08___address_line2",
+        "type": "text"
+      },
+      "ax_name": null,
+      "x_path": "/html/body/form/input[@name='08___address_line2']",
+      "stable_hash": 74734
+    },
+    "result_ok": true,
+    "error": null,
+    "duration_s": 0.9,
+    "goal": "Enter address line two",
+    "cacheable": true
+  },
+  {
+    "step": 5,
+    "action": "input",
+    "params": {
+      "text": "SF"
+    },
+    "element": {
+      "node_name": "INPUT",
+      "attributes": {
+        "name": "09___city",
+        "type": "text"
+      },
+      "ax_name": null,
+      "x_path": "/html/body/form/input[@name='09___city']",
+      "stable_hash": 59068
+    },
+    "result_ok": true,
+    "error": null,
+    "duration_s": 0.9,
+    "goal": "Enter the city",
+    "cacheable": true
+  },
+  {
+    "step": 6,
+    "action": "click",
+    "params": {},
+    "element": {
+      "node_name": "BUTTON",
+      "attributes": {
+        "name": "submit",
+        "type": "text",
+        "id": "btnSubmit"
+      },
+      "ax_name": "Submit",
+      "x_path": "/html/body/form/input[@name='submit']",
+      "stable_hash": 57719
+    },
+    "result_ok": true,
+    "error": null,
+    "duration_s": 0.7,
+    "goal": "Click submit",
+    "cacheable": true
+  }
+]

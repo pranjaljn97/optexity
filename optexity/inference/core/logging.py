@@ -354,6 +354,7 @@ async def save_latest_memory_state_locally(
                 downloaded_file.name for downloaded_file in memory.downloads
             ],
             "token_usage": memory.token_usage.model_dump(),
+            "command_fallback_count": automation_state.command_fallback_count,
             "unique_child_arn": memory.unique_child_arn,
             "system_info": browser_state.system_info.model_dump(mode="json"),
         }
