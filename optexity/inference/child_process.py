@@ -180,6 +180,40 @@ async def setup_browser(task: Task, unique_child_arn: str, child_process_id: int
             raise
 
 
+def _apply_local_automation_override(task: Task) -> None:
+    """Local development override: if a ``test_automation.json`` exists in the working
+    directory, run it instead of the server's automation. Applied at the single queue
+    consumer so it covers every entry point (/allocate_task, /inference) and the
+    subprocess worker (the task is serialized after this). Safe no-op when absent — and
+    the learning-cache loop relies on this to iterate without database access.
+    """
+    test_automation_path = os.path.join(os.getcwd(), "test_automation.json")
+    if not os.path.exists(test_automation_path):
+        return
+    from optexity.schema.automation import Automation
+
+    with open(test_automation_path, "r") as f:
+        task.automation = Automation.model_validate(json.load(f))
+
+    # Realign the task's parameters to the overriding automation's declared keys — the
+    # worker re-validates the Task (keys must match exactly), and the local automation
+    # usually declares different (often no) parameters than the server one. Keep any
+    # existing values, fall back to the automation's declared example values.
+    declared = task.automation.parameters
+    task.input_parameters = {
+        k: task.input_parameters.get(k, v)
+        for k, v in declared.input_parameters.items()
+    }
+    task.secure_parameters = {
+        k: task.secure_parameters.get(k, v)
+        for k, v in declared.secure_parameters.items()
+    }
+    task.unique_parameter_names = [
+        n for n in task.unique_parameter_names if n in task.input_parameters
+    ]
+    logger.info(f"Overriding automation from local {test_automation_path}")
+
+
 async def run_automation_in_process(
     task: Task, unique_child_arn: str, child_process_id: int
 ):
@@ -349,6 +383,7 @@ async def task_processor():
         try:
             # Get next task from queue (blocks until one is available)
             task = await task_queue.get()
+            _apply_local_automation_override(task)
             if task.task_id in tasks_to_kill:
                 logger.info(f"Task {task.task_id} has been killed")
                 tasks_to_kill.remove(task.task_id)
@@ -573,22 +608,6 @@ def get_app_with_endpoints(is_aws: bool, child_id: int, port: int = -1):
                 task_data = response_data["task"]
 
                 task = Task.model_validate_json(task_data)
-
-                # Local development override: if a test_automation.json exists in the
-                # working directory, use it instead of the server's automation. Lets us
-                # iterate on automations locally (and run the learning-cache loop) without
-                # database access. Safe no-op when the file is absent.
-                test_automation_path = os.path.join(os.getcwd(), "test_automation.json")
-                if os.path.exists(test_automation_path):
-                    from optexity.schema.automation import Automation
-
-                    with open(test_automation_path, "r") as f:
-                        automation = Automation.model_validate(json.load(f))
-                    task.automation = automation
-                    logger.info(
-                        f"Overriding automation from local {test_automation_path}"
-                    )
-
                 if task.use_proxy and settings.PROXY_URL is None:
                     raise ValueError(
                         "PROXY_URL is not set and is required when use_proxy is True"

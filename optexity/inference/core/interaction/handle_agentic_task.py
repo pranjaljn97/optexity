@@ -80,6 +80,19 @@ async def handle_agentic_task(
         except Exception as e:
             logger.warning(f"Failed to export deterministic trace: {e}")
 
+        # Attribute the agentic step's LLM cost to the task so the cache loop can measure
+        # the token savings of replaying deterministically (browser-use accounts tokens in
+        # its own history, separate from optexity's memory.token_usage).
+        try:
+            usage = agent_history.usage
+            if usage is not None:
+                memory.token_usage.input_tokens += usage.total_prompt_tokens
+                memory.token_usage.output_tokens += usage.total_completion_tokens
+                memory.token_usage.total_tokens += usage.total_tokens
+                memory.token_usage.total_cost += usage.total_cost
+        except Exception as e:
+            logger.warning(f"Failed to record agentic token usage: {e}")
+
         agent.stop()
         if agent.browser_session:
             await agent.browser_session.stop()

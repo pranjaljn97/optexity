@@ -20,8 +20,8 @@
         "max_timeout_seconds_per_try": 1.0,
         "verify_before_step": true,
         "input_text": {
-          "command": "locator(\"input[name='01___full_name']\")",
-          "prompt_instructions": "Enter full name",
+          "command": "locator(\"input[name='04fullname']\")",
+          "prompt_instructions": "Fill Full Name, Address Line 1, Address Line 2, and City fields.",
           "skip_command": false,
           "skip_prompt": false,
           "assert_locator_presence": false,
@@ -44,8 +44,8 @@
         "max_timeout_seconds_per_try": 1.0,
         "verify_before_step": true,
         "input_text": {
-          "command": "locator(\"input[name='07___address_line1']\")",
-          "prompt_instructions": "Enter address line one",
+          "command": "locator(\"input[name='10address1']\")",
+          "prompt_instructions": "Fill Full Name, Address Line 1, Address Line 2, and City fields.",
           "skip_command": false,
           "skip_prompt": false,
           "assert_locator_presence": false,
@@ -68,8 +68,8 @@
         "max_timeout_seconds_per_try": 1.0,
         "verify_before_step": true,
         "input_text": {
-          "command": "locator(\"input[name='08___address_line2']\")",
-          "prompt_instructions": "Enter address line two",
+          "command": "locator(\"input[name='11address2']\")",
+          "prompt_instructions": "Fill Full Name, Address Line 1, Address Line 2, and City fields.",
           "skip_command": false,
           "skip_prompt": false,
           "assert_locator_presence": false,
@@ -92,8 +92,8 @@
         "max_timeout_seconds_per_try": 1.0,
         "verify_before_step": true,
         "input_text": {
-          "command": "locator(\"input[name='09___city']\")",
-          "prompt_instructions": "Enter the city",
+          "command": "locator(\"input[name='13adr_city']\")",
+          "prompt_instructions": "Fill the City field with 'SF' and then complete the task.",
           "skip_command": false,
           "skip_prompt": false,
           "assert_locator_presence": false,
@@ -102,30 +102,6 @@
           "fill_or_type": "fill",
           "press_enter": false,
           "click_before_input": true
-        }
-      },
-      "before_sleep_time": 0.0,
-      "end_sleep_time": 5.0,
-      "expect_new_tab": false,
-      "max_new_tab_wait_time": 0.0
-    },
-    {
-      "type": "action_node",
-      "interaction_action": {
-        "max_tries": 10,
-        "max_timeout_seconds_per_try": 1.0,
-        "verify_before_step": true,
-        "click_element": {
-          "command": "locator(\"#btnSubmit\")",
-          "prompt_instructions": "Click submit",
-          "skip_command": false,
-          "skip_prompt": false,
-          "assert_locator_presence": false,
-          "double_click": false,
-          "expect_download": false,
-          "button": "left",
-          "mouse_click": false,
-          "force": false
         }
       },
       "before_sleep_time": 0.0,

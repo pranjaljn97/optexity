@@ -65,6 +65,22 @@ def test_xpath_fallback_when_nothing_stable():
     assert cmd is not None and "xpath=" in cmd["command"]
 
 
+def test_digit_prefixed_name_prefers_name_over_xpath():
+    # Real roboform field: the engine's _looks_dynamic flags "04fullname" (>=2 digits),
+    # but it's a stable hand-authored name and resolved at capture time, so the relaxed
+    # cache rule should pick the name selector over a brittle positional xpath.
+    el = {"node_name": "INPUT", "attributes": {"name": "04fullname"},
+          "ax_name": None, "x_path": "/html/body/div[2]/form/div/div[1]/div[5]/div[2]/input"}
+    assert synthesize_command(el)["command"] == "locator(\"input[name='04fullname']\")"
+
+
+def test_genuine_hash_still_falls_to_xpath():
+    # A digit-dense hash should NOT be re-admitted by the relaxed rule.
+    el = {"node_name": "INPUT", "attributes": {"name": "x7f3a9b2c1d4"},
+          "ax_name": None, "x_path": "/html/body/input"}
+    assert "xpath=" in synthesize_command(el)["command"]
+
+
 def test_ranked_commands_are_sorted_best_first():
     el = {"node_name": "INPUT", "attributes": {"id": "x", "name": "y"},
           "ax_name": None, "x_path": "/p"}

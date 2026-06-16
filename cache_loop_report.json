@@ -1,0 +1,14 @@
+{
+  "agentic_capture": {
+    "fallback_count": 0,
+    "total_tokens": 25339,
+    "wall_clock_seconds": 25.500757
+  },
+  "cached_replay": {
+    "fallback_count": 0,
+    "total_tokens": 0,
+    "wall_clock_seconds": 8.481123
+  },
+  "token_reduction": 25339,
+  "speedup_x": 3.01
+}
