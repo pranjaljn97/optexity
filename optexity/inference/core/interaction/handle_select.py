@@ -23,6 +23,7 @@ from optexity.inference.core.interaction.utils import (
     update_screenshot_with_highlight,
 )
 from optexity.inference.infra.browser import Browser
+from optexity.inference.infra.utils import serialize_axtree
 from optexity.inference.models import get_llm_model_with_fallback
 from optexity.schema.actions.interaction_action import SelectOptionAction
 from optexity.schema.memory import BrowserState, Memory
@@ -51,8 +52,9 @@ async def llm_select_option_prediction(
         url=browser_state_summary.url,
         screenshot=browser_state_summary.screenshot,
         title=browser_state_summary.title,
-        axtree=browser_state_summary.dom_state.llm_representation(
-            remove_empty_nodes=task.automation.remove_empty_nodes_in_axtree
+        axtree=serialize_axtree(
+            browser_state_summary.dom_state,
+            task.automation.remove_empty_nodes_in_axtree,
         ),
     )
 

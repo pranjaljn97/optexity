@@ -11,9 +11,10 @@ proof that the cache is schema-valid.
 
 from __future__ import annotations
 
-from optexity.inference.cache.locator_synth import synthesize_command
+from optexity.inference.cache.locator_synth import element_fingerprint, synthesize_command
 from optexity.schema.actions.interaction_action import (
     ClickElementAction,
+    ElementFingerprint,
     InputTextAction,
     InteractionAction,
     SelectOptionAction,
@@ -41,11 +42,14 @@ def _interaction_for_step(step: dict) -> InteractionAction | None:
     command = synth["command"]
     family = step["family"]
     params = step.get("params") or {}
+    # Element identity for self-repair verification (inert unless the feature is enabled).
+    fingerprint = ElementFingerprint(**element_fingerprint(step["element"]))
 
     if family == "input":
         return InteractionAction(
             input_text=InputTextAction(
                 command=command,
+                fingerprint=fingerprint,
                 input_text=params.get("text"),
                 prompt_instructions=_default_prompt(step, "Enter text in the field"),
             )
@@ -54,6 +58,7 @@ def _interaction_for_step(step: dict) -> InteractionAction | None:
         return InteractionAction(
             click_element=ClickElementAction(
                 command=command,
+                fingerprint=fingerprint,
                 prompt_instructions=_default_prompt(step, "Click the element"),
             )
         )
@@ -61,6 +66,7 @@ def _interaction_for_step(step: dict) -> InteractionAction | None:
         return InteractionAction(
             select_option=SelectOptionAction(
                 command=command,
+                fingerprint=fingerprint,
                 input_text=params.get("text"),
                 prompt_instructions=_default_prompt(step, "Select the option"),
             )
@@ -69,6 +75,7 @@ def _interaction_for_step(step: dict) -> InteractionAction | None:
         return InteractionAction(
             upload_file=UploadFileAction(
                 command=command,
+                fingerprint=fingerprint,
                 input_text=params.get("path"),
                 prompt_instructions=_default_prompt(step, "Upload the file"),
             )

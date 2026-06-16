@@ -21,6 +21,18 @@ class DialogAction(BaseModel):
     prompt_instructions: str
 
 
+class ElementFingerprint(BaseModel):
+    """Identity of the element a cached ``command`` was compiled against, captured at
+    compile time. Used by the self-repairing cache to verify, before acting, that a
+    cached locator still points at the *same* element (guards against a locator that
+    resolves to the wrong element after an upstream change). Optional and inert unless
+    the self-repair feature is enabled — see ``inference.cache.self_repair``."""
+
+    tag: str | None = None
+    attributes: dict[str, str] = Field(default_factory=dict)
+    ax_name: str | None = None
+
+
 class BaseAction(BaseModel):
     xpath: str | None = None
     coordinates: tuple[int, int] | tuple[str, str] | None = None
@@ -32,6 +44,9 @@ class BaseAction(BaseModel):
     assert_locator_presence: bool = False
     recording_screenshot: str | None = None
     bounding_box_variables: list[str] | None = None
+    # Element identity for the cached command (self-repairing cache). None for
+    # hand-authored nodes, so verification is a no-op for them.
+    fingerprint: ElementFingerprint | None = None
 
     @model_validator(mode="after")
     def validate_bounding_box_variables_length(self):

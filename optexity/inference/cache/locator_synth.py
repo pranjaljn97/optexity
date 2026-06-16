@@ -63,6 +63,17 @@ class _TraceElementAdapter:
         self.ax_node = _AxNode(role=(attrs.get("role") or ""), name=element.get("ax_name") or "")
 
 
+def element_fingerprint(element: dict) -> dict:
+    """Build the element-identity fingerprint for a trace element, for the self-repairing
+    cache to verify against at replay time. Same element dict the locator is synthesized
+    from. Delegates to the single fingerprint builder in ``self_repair``."""
+    from optexity.inference.cache.self_repair import make_fingerprint
+
+    return make_fingerprint(
+        element.get("node_name"), element.get("attributes"), element.get("ax_name")
+    )
+
+
 def ranked_commands(element: dict) -> list[dict]:
     """All viable locator commands for the element, best-first, each tagged with its
     ``kind`` and stability ``score``. Useful for logging/debugging the cache decision."""

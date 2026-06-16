@@ -5,6 +5,7 @@ from optexity.exceptions import (
     AxtreeIndexActionFailedException,
     ElementNotFoundInAxtreeException,
 )
+from optexity.inference.cache.self_repair import cache_config, record_heal
 from optexity.inference.agents.input_text_prediction.input_text_prediction import (
     InputTextPredictionAgent,
 )
@@ -17,6 +18,7 @@ from optexity.inference.core.interaction.utils import (
     update_screenshot_with_highlight,
 )
 from optexity.inference.infra.browser import Browser
+from optexity.inference.infra.utils import serialize_axtree
 from optexity.inference.models import get_llm_model_with_fallback
 from optexity.schema.actions.interaction_action import InputTextAction
 from optexity.schema.memory import BrowserState, Memory
@@ -45,8 +47,9 @@ async def llm_input_text_prediction(
         url=browser_state_summary.url,
         screenshot=browser_state_summary.screenshot,
         title=browser_state_summary.title,
-        axtree=browser_state_summary.dom_state.llm_representation(
-            remove_empty_nodes=task.automation.remove_empty_nodes_in_axtree
+        axtree=serialize_axtree(
+            browser_state_summary.dom_state,
+            task.automation.remove_empty_nodes_in_axtree,
         ),
     )
 
@@ -158,12 +161,16 @@ async def input_text_index(
 
         try:
             results = await browser.backend_agent.multi_act([action_model])
-            await LocatorExtraction.log_interacted_locator(
+            heal_info = await LocatorExtraction.log_interacted_locator(
                 browser,
                 index,
                 f".fill({(input_text_action.input_text or '')!r})",
                 memory,
             )
+            # Self-repairing cache: write the relearned locator+fingerprint back into the
+            # node so the cache stops re-paying the LLM for this step. No-op unless enabled.
+            if cache_config.heal_on_fallback:
+                record_heal(input_text_action, heal_info, memory)
             if results and results[0].error:
                 raise RuntimeError(
                     f"browseruse input failed at index {index}: {results[0].error}"

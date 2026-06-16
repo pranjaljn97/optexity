@@ -75,10 +75,28 @@ async def handle_agentic_task(
         # optexity.inference.cache for the synth side.
         try:
             trace_path = step_directory / "trace.json"
-            agent_history.export_deterministic_trace(trace_path)
+            trace = agent_history.export_deterministic_trace(trace_path)
             logger.debug(f"Exported deterministic trace to {trace_path}")
         except Exception as e:
+            trace = None
             logger.warning(f"Failed to export deterministic trace: {e}")
+
+        # Seed the learning cache: compile the agentic trace into a deterministic
+        # automation keyed by endpoint, so the next run can serve it instead of re-running
+        # the agent. Opt-in (OPTEXITY_CACHE_SERVE); never blocks the run.
+        from optexity.inference.cache.self_repair import cache_config
+
+        if cache_config.serve_cache and trace:
+            try:
+                from optexity.inference.cache import compile_trace
+                from optexity.inference.cache.self_repair import persist_automation
+
+                automation, stats = compile_trace(trace, task.automation.url)
+                if automation.nodes:
+                    persist_automation(task.endpoint_name, automation)
+                    logger.debug(f"Seeded learning cache from agentic trace: {stats}")
+            except Exception as e:
+                logger.warning(f"Failed to seed learning cache: {e}")
 
         # Attribute the agentic step's LLM cost to the task so the cache loop can measure
         # the token savings of replaying deterministically (browser-use accounts tokens in

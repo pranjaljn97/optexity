@@ -180,38 +180,66 @@ async def setup_browser(task: Task, unique_child_arn: str, child_process_id: int
             raise
 
 
-def _apply_local_automation_override(task: Task) -> None:
-    """Local development override: if a ``test_automation.json`` exists in the working
-    directory, run it instead of the server's automation. Applied at the single queue
-    consumer so it covers every entry point (/allocate_task, /inference) and the
-    subprocess worker (the task is serialized after this). Safe no-op when absent — and
-    the learning-cache loop relies on this to iterate without database access.
-    """
-    test_automation_path = os.path.join(os.getcwd(), "test_automation.json")
-    if not os.path.exists(test_automation_path):
-        return
-    from optexity.schema.automation import Automation
-
-    with open(test_automation_path, "r") as f:
-        task.automation = Automation.model_validate(json.load(f))
-
-    # Realign the task's parameters to the overriding automation's declared keys — the
-    # worker re-validates the Task (keys must match exactly), and the local automation
-    # usually declares different (often no) parameters than the server one. Keep any
-    # existing values, fall back to the automation's declared example values.
-    declared = task.automation.parameters
+def _swap_automation(task: Task, automation) -> None:
+    """Replace task.automation and realign the task's parameters to the new automation's
+    declared keys — the worker re-validates the Task (keys must match exactly), and a
+    local/cached automation usually declares different (often no) parameters than the
+    server one. Keep existing values, fall back to the automation's declared examples."""
+    task.automation = automation
+    declared = automation.parameters
     task.input_parameters = {
-        k: task.input_parameters.get(k, v)
-        for k, v in declared.input_parameters.items()
+        k: task.input_parameters.get(k, v) for k, v in declared.input_parameters.items()
     }
     task.secure_parameters = {
-        k: task.secure_parameters.get(k, v)
-        for k, v in declared.secure_parameters.items()
+        k: task.secure_parameters.get(k, v) for k, v in declared.secure_parameters.items()
     }
     task.unique_parameter_names = [
         n for n in task.unique_parameter_names if n in task.input_parameters
     ]
-    logger.info(f"Overriding automation from local {test_automation_path}")
+
+
+def _apply_local_automation_override(task: Task) -> None:
+    """Pick which automation actually runs, in precedence order, before the worker runs it.
+    Applied at the single queue consumer so it covers every entry point (/allocate_task,
+    /inference) and the subprocess worker.
+
+    1. **Dev fixture** (``OPTEXITY_TEST_AUTOMATION``): run a local file. Opt-in; unset by
+       default so REAL automations run untouched.
+    2. **Learning cache** (``OPTEXITY_CACHE_SERVE``): if a cached deterministic automation
+       exists for this endpoint, serve it instead of the server's — this is what makes
+       subsequent runs *reuse* the cache (fast deterministic replay; verify+heal keep it
+       correct). Opt-in.
+    3. Otherwise: the server's automation (default).
+    """
+    from optexity.schema.automation import Automation
+
+    # 1. dev fixture override
+    override = os.getenv("OPTEXITY_TEST_AUTOMATION", "").strip()
+    if override:
+        if override.lower() in ("1", "true", "yes"):
+            override = "test_automation.json"
+        path = override if os.path.isabs(override) else os.path.join(os.getcwd(), override)
+        if os.path.exists(path):
+            with open(path, "r") as f:
+                _swap_automation(task, Automation.model_validate(json.load(f)))
+            logger.info(f"Overriding automation from local {path}")
+            return
+        logger.warning(f"OPTEXITY_TEST_AUTOMATION set but {path} not found; ignoring")
+
+    # 2. serve from the learning cache (per-endpoint), if enabled and present
+    from optexity.inference.cache.self_repair import cache_config, load_cached_automation
+
+    if cache_config.serve_cache:
+        cached = load_cached_automation(getattr(task, "endpoint_name", None))
+        if cached:
+            _swap_automation(task, Automation.model_validate(cached))
+            logger.info(
+                f"Serving cached automation for endpoint {task.endpoint_name} "
+                "(learning cache hit)"
+            )
+            return
+
+    # 3. default: run the real (server) automation — no change.
 
 
 async def run_automation_in_process(

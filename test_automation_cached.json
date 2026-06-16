@@ -21,10 +21,17 @@
         "verify_before_step": true,
         "input_text": {
           "command": "locator(\"input[name='04fullname']\")",
-          "prompt_instructions": "Fill Full Name, Address Line 1, Address Line 2, and City fields.",
+          "prompt_instructions": "Fill the Full Name, Address Line 1, Address Line 2, and City fields.",
           "skip_command": false,
           "skip_prompt": false,
           "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "input",
+            "attributes": {
+              "name": "04fullname",
+              "type": "text"
+            }
+          },
           "input_text": "myname",
           "is_slider": false,
           "fill_or_type": "fill",
@@ -45,10 +52,17 @@
         "verify_before_step": true,
         "input_text": {
           "command": "locator(\"input[name='10address1']\")",
-          "prompt_instructions": "Fill Full Name, Address Line 1, Address Line 2, and City fields.",
+          "prompt_instructions": "Fill the Full Name, Address Line 1, Address Line 2, and City fields.",
           "skip_command": false,
           "skip_prompt": false,
           "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "input",
+            "attributes": {
+              "name": "10address1",
+              "type": "text"
+            }
+          },
           "input_text": "xyz",
           "is_slider": false,
           "fill_or_type": "fill",
@@ -69,10 +83,17 @@
         "verify_before_step": true,
         "input_text": {
           "command": "locator(\"input[name='11address2']\")",
-          "prompt_instructions": "Fill Full Name, Address Line 1, Address Line 2, and City fields.",
+          "prompt_instructions": "Fill the Full Name, Address Line 1, Address Line 2, and City fields.",
           "skip_command": false,
           "skip_prompt": false,
           "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "input",
+            "attributes": {
+              "name": "11address2",
+              "type": "text"
+            }
+          },
           "input_text": "abc",
           "is_slider": false,
           "fill_or_type": "fill",
@@ -93,10 +114,17 @@
         "verify_before_step": true,
         "input_text": {
           "command": "locator(\"input[name='13adr_city']\")",
-          "prompt_instructions": "Fill the City field with 'SF' and then complete the task.",
+          "prompt_instructions": "Input 'SF' into the City field (index 24) and then complete the task.",
           "skip_command": false,
           "skip_prompt": false,
           "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "input",
+            "attributes": {
+              "name": "13adr_city",
+              "type": "text"
+            }
+          },
           "input_text": "SF",
           "is_slider": false,
           "fill_or_type": "fill",

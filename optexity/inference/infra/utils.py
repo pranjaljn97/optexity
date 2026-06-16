@@ -6,6 +6,19 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+def serialize_axtree(dom_state, remove_empty_nodes: bool = False) -> str:
+    """Serialize a browser-use ``SerializedDOMState`` to its LLM/axtree string.
+
+    Compatibility shim: some browser-use versions' ``llm_representation()`` do not accept
+    ``remove_empty_nodes``. Keeping this tolerance on the optexity side means our
+    browser-use fork stays a clean superset of upstream (no signature changes to existing
+    upstream methods)."""
+    try:
+        return dom_state.llm_representation(remove_empty_nodes=remove_empty_nodes)
+    except TypeError:
+        return dom_state.llm_representation()
+
+
 def _download_extension(url: str, output_path: Path) -> None:
     """Download extension .crx file."""
     import urllib.request

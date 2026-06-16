@@ -4,6 +4,7 @@ from optexity.exceptions import (
     AxtreeIndexActionFailedException,
     ElementNotFoundInAxtreeException,
 )
+from optexity.inference.cache.self_repair import cache_config, record_heal
 from optexity.inference.core.interaction.handle_command import (
     command_based_action_with_retry,
 )
@@ -78,12 +79,16 @@ async def click_element_index(
                 **{"click": {"index": index, "button": click_element_action.button}}
             )
             results = await browser.backend_agent.multi_act([action_model])
-            await LocatorExtraction.log_interacted_locator(
+            heal_info = await LocatorExtraction.log_interacted_locator(
                 browser,
                 index,
                 f".click(button={click_element_action.button!r})",
                 memory,
             )
+            # Self-repairing cache: write the relearned locator+fingerprint back into the
+            # node so the cache stops re-paying the LLM for this step. No-op unless enabled.
+            if cache_config.heal_on_fallback:
+                record_heal(click_element_action, heal_info, memory)
             if results and results[0].error:
                 raise RuntimeError(
                     f"browseruse click failed at index {index}: {results[0].error}"

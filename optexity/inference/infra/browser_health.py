@@ -8,6 +8,7 @@ from pathlib import Path
 from browser_use.browser.views import BrowserStateSummary
 
 from optexity.inference.infra.browser import Browser
+from optexity.inference.infra.utils import serialize_axtree
 from optexity.schema.memory import BrowserState, Memory
 from optexity.schema.task import Task
 
@@ -82,8 +83,9 @@ def update_memory_browser_state_from_summary(
         url=browser_state_summary.url,
         screenshot=browser_state_summary.screenshot,
         title=browser_state_summary.title,
-        axtree=browser_state_summary.dom_state.llm_representation(
-            remove_empty_nodes=task.automation.remove_empty_nodes_in_axtree
+        axtree=serialize_axtree(
+            browser_state_summary.dom_state,
+            task.automation.remove_empty_nodes_in_axtree,
         ),
     )
 

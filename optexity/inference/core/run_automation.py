@@ -12,6 +12,7 @@ from pathlib import Path
 from patchright._impl._errors import TimeoutError as PatchrightTimeoutError
 from playwright._impl._errors import TimeoutError as PlaywrightTimeoutError
 
+from optexity.inference.cache.self_repair import cache_config, persist_healed_automation
 from optexity.inference.core.interaction.handle_captcha import handle_captcha_action
 from optexity.inference.core.interaction.utils import (
     _wait_for_file_stable,
@@ -36,6 +37,7 @@ from optexity.inference.core.run_interaction import (
 from optexity.inference.core.run_misc import run_fail_state_action, run_sleep_action
 from optexity.inference.core.run_python_script import run_python_script_action
 from optexity.inference.infra.browser import Browser
+from optexity.inference.infra.utils import serialize_axtree
 from optexity.schema.actions.interaction_action import DownloadUrlAsPdfAction
 from optexity.schema.automation import ActionNode, ForLoopNode, IfElseNode
 from optexity.schema.memory import BrowserState, ForLoopStatus, Memory, OutputData
@@ -169,6 +171,10 @@ async def run_automation(
                 await run_post_processing_nodes(task, memory, browser)
             if memory and browser:
                 await run_final_logging(task, memory, browser, child_process_id)
+            # Self-repairing cache: write any locators relearned via fallback this run back
+            # to the cached automation file. No-op unless enabled and a heal occurred.
+            if memory and cache_config.heal_on_fallback:
+                persist_healed_automation(task, memory)
         if browser is not None:
             await browser.stop()
 
@@ -281,8 +287,9 @@ async def run_final_logging(
                     url=browser_state_summary.url,
                     screenshot=browser_state_summary.screenshot,
                     title=browser_state_summary.title,
-                    axtree=browser_state_summary.dom_state.llm_representation(
-                        remove_empty_nodes=task.automation.remove_empty_nodes_in_axtree
+                    axtree=serialize_axtree(
+                        browser_state_summary.dom_state,
+                        task.automation.remove_empty_nodes_in_axtree,
                     ),
                 )
             )

@@ -5,6 +5,7 @@ import time
 from playwright.async_api import Locator
 
 from optexity.exceptions import AssertLocatorPresenceException
+from optexity.inference.cache.self_repair import cache_config, verify_or_fallback
 from optexity.inference.core.interaction.handle_select_utils import (
     SelectOptionValue,
     smart_select,
@@ -15,6 +16,7 @@ from optexity.inference.core.interaction.utils import (
     highlight_element_and_screenshot,
 )
 from optexity.inference.infra.browser import Browser
+from optexity.inference.infra.utils import serialize_axtree
 from optexity.schema.actions.interaction_action import (
     CheckAction,
     ClickElementAction,
@@ -102,6 +104,16 @@ async def command_based_action_with_retry(
                 )
                 await asyncio.sleep(0.05)
 
+                # Self-repairing cache: verify the resolved element still matches the one
+                # this command was compiled against before acting on it. Mismatch -> fall
+                # back to the LLM rather than acting on a possibly-wrong element. No-op
+                # unless enabled and the node carries a fingerprint.
+                if cache_config.verify_fingerprint and action.fingerprint:
+                    mismatch = await verify_or_fallback(action, locator)
+                    if mismatch:
+                        last_error = mismatch
+                        break
+
                 try:
                     page = await browser.get_current_page()
                     bbox = await locator.bounding_box() if page else None
@@ -127,8 +139,9 @@ async def command_based_action_with_retry(
                     summary = await browser.get_browser_state_summary(
                         include_screenshot=False
                     )
-                    axtree = summary.dom_state.llm_representation(
-                        remove_empty_nodes=task.automation.remove_empty_nodes_in_axtree
+                    axtree = serialize_axtree(
+                        summary.dom_state,
+                        task.automation.remove_empty_nodes_in_axtree,
                     )
                     logger.debug(
                         f"Command-step axtree capture took "

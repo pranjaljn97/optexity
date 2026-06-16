@@ -317,12 +317,24 @@ class Browser:
         if self.backend_agent is None:
             raise ValueError("Backend agent is not set")
 
-        browser_state_summary = await self.backend_agent.browser_session.get_browser_state_summary(
+        # NB: this browser-use fork's BrowserSession.get_browser_state_summary does not
+        # accept `include_full_page`; forwarding it raises TypeError and breaks the LLM
+        # fallback / extraction / final-screenshot paths. Don't forward it (the wrapper
+        # still accepts the arg for caller compatibility; full-page capture is simply a
+        # no-op against this backend version).
+        kwargs = dict(
             include_screenshot=include_screenshot,  # default True even if use_vision=False so cloud sync is useful (it's fast now anyway); pass False when only the axtree is needed
             include_recent_events=False,
             cached=False,
-            include_full_page=include_full_page,
         )
+        try:
+            browser_state_summary = await self.backend_agent.browser_session.get_browser_state_summary(
+                include_full_page=include_full_page, **kwargs
+            )
+        except TypeError:
+            browser_state_summary = await self.backend_agent.browser_session.get_browser_state_summary(
+                **kwargs
+            )
 
         return browser_state_summary
 

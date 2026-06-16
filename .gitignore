@@ -216,3 +216,8 @@ node_modules
 optexity/utils/optexity.code-workspace
 
 tmp
+# learning-cache runtime entries (per-endpoint)
+optexity_cache/
+test_automation_healed.json
+cache_loop_report.json
+sample_trace.json

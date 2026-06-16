@@ -20,6 +20,7 @@ from optexity.inference.agents.index_prediction.action_prediction_locator_axtree
     ActionPredictionLocatorAxtree,
 )
 from optexity.inference.infra.browser import Browser
+from optexity.inference.infra.utils import serialize_axtree
 from optexity.inference.models import get_llm_model_with_fallback
 from optexity.schema.memory import BrowserState, Memory
 from optexity.schema.task import Task
@@ -486,7 +487,7 @@ class LocatorExtraction:
     @classmethod
     async def log_interacted_locator(
         cls, browser: Browser, index: int, method: str, memory: Memory | None = None
-    ) -> None:
+    ) -> dict | None:
         """Log (and record on the trajectory) the Playwright-style locator browser-use
         actually interacted with for the LLM-predicted axtree *index*.
 
@@ -495,6 +496,10 @@ class LocatorExtraction:
         the trailing Playwright call to make the line copy-pasteable, e.g. ``.click()``
         or ``.fill("foo")``. When ``memory`` is given the full ``page.<locator><method>``
         expression is recorded on the current browser state. Best-effort, never raises.
+
+        Returns ``{"command", "fingerprint"}`` for the relearned element (the bare,
+        eval-ready locator and its identity) so the self-repairing cache can heal the node
+        — or None if nothing usable was resolved.
         """
         try:
             backend_agent = browser.backend_agent
@@ -502,7 +507,7 @@ class LocatorExtraction:
                 logger.info(
                     f"LLM fallback locator [index {index}]: unavailable (no backend session)"
                 )
-                return
+                return None
             element = await backend_agent.browser_session.get_dom_element_by_index(
                 index
             )
@@ -510,7 +515,7 @@ class LocatorExtraction:
                 logger.info(
                     f"LLM fallback locator [index {index}]: unavailable (index not in selector map)"
                 )
-                return
+                return None
             candidates = cls.locator_candidates(element, method)
             if candidates:
                 logger.info(
@@ -518,10 +523,29 @@ class LocatorExtraction:
                     f"(+{len(candidates) - 1} more candidate(s))"
                 )
                 cls.record_locator_candidates(memory, candidates)
+
+            # Heal info for the self-repairing cache: the bare (eval-ready) best locator
+            # plus the element's identity fingerprint.
+            from optexity.inference.cache.self_repair import make_fingerprint
+
+            command = cls.build_playwright_locator(element)
+            if not command.startswith(("locator(", "get_by")):
+                return None
+            ax = getattr(element, "ax_node", None)
+            ax_name = (ax.name if ax and getattr(ax, "name", None) else None)
+            return {
+                "command": command,
+                "fingerprint": make_fingerprint(
+                    getattr(element, "tag_name", None),
+                    getattr(element, "attributes", None),
+                    ax_name,
+                ),
+            }
         except Exception as e:
             logger.debug(
                 f"log_interacted_locator failed for index {index}: {type(e).__name__}: {e}"
             )
+            return None
 
 
 _index_prediction_cache: dict[tuple, ActionPredictionLocatorAxtree] = {}
@@ -545,8 +569,9 @@ async def get_index_from_prompt(
         url=browser_state_summary.url,
         screenshot=browser_state_summary.screenshot,
         title=browser_state_summary.title,
-        axtree=browser_state_summary.dom_state.llm_representation(
-            remove_empty_nodes=task.automation.remove_empty_nodes_in_axtree
+        axtree=serialize_axtree(
+            browser_state_summary.dom_state,
+            task.automation.remove_empty_nodes_in_axtree,
         ),
     )
 

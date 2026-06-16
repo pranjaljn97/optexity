@@ -165,6 +165,10 @@ class Memory(BaseModel):
     downloads: list[Path] = Field(default_factory=list)
     final_screenshot: str | None = Field(default=None)
     system_info_tracking: list[SystemInfo] = Field(default_factory=list)
+    # Cache self-repair: locators relearned via the LLM fallback during this run, each
+    # {step_index, new_command, new_fingerprint}. Persisted back to the cached automation
+    # at the end of the run so the cache repairs itself. See inference.cache.self_repair.
+    heals: list[dict] = Field(default_factory=list)
     unique_child_arn: str
 
     model_config = {
