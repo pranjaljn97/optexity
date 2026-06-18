@@ -1,0 +1,296 @@
+{
+  "browser_channel": "chromium",
+  "backend": "browser-use",
+  "allow_cookies": false,
+  "max_retries": 0,
+  "expected_downloads": 0,
+  "remove_empty_nodes_in_axtree": true,
+  "url": "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login",
+  "take_final_screenshot": true,
+  "parameters": {
+    "input_parameters": {},
+    "secure_parameters": {},
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "input_text": {
+          "command": "locator(\"input[name='username']\")",
+          "prompt_instructions": "Input username, password, and click the Login button to log in to OrangeHRM.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "input",
+            "attributes": {
+              "name": "username",
+              "placeholder": "Username"
+            },
+            "ax_name": "Username"
+          },
+          "input_text": "Admin",
+          "is_slider": false,
+          "fill_or_type": "fill",
+          "press_enter": false,
+          "click_before_input": true
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "input_text": {
+          "command": "locator(\"input[name='password']\")",
+          "prompt_instructions": "Input username, password, and click the Login button to log in to OrangeHRM.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "input",
+            "attributes": {
+              "name": "password",
+              "placeholder": "Password",
+              "type": "password"
+            },
+            "ax_name": "Password"
+          },
+          "input_text": "admin123",
+          "is_slider": false,
+          "fill_or_type": "fill",
+          "press_enter": false,
+          "click_before_input": true
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "locator(\"button.oxd-button.oxd-button--medium.oxd-button--main\", has_text=\"Login\")",
+          "prompt_instructions": "Input username, password, and click the Login button to log in to OrangeHRM.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "button",
+            "attributes": {
+              "type": "submit"
+            },
+            "ax_name": "Login"
+          },
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "locator(\"a.oxd-main-menu-item\", has_text=\"Buzz\")",
+          "prompt_instructions": "Click on the 'Buzz' module link in the left sidebar menu to navigate to the Buzz page.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "a",
+            "attributes": {},
+            "ax_name": "Buzz"
+          },
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "input_text": {
+          "command": "get_by_placeholder(\"What's on your mind?\")",
+          "prompt_instructions": "Type 'Hello from the team!' into the post box and click the Post button.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "textarea",
+            "attributes": {
+              "placeholder": "What's on your mind?"
+            },
+            "ax_name": "What's on your mind?"
+          },
+          "input_text": "Hello from the team!",
+          "is_slider": false,
+          "fill_or_type": "fill",
+          "press_enter": false,
+          "click_before_input": true
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "locator(\"button.oxd-button.oxd-button--medium.oxd-button--main\", has_text=\"Post\")",
+          "prompt_instructions": "Type 'Hello from the team!' into the post box and click the Post button.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "button",
+            "attributes": {
+              "type": "submit"
+            },
+            "ax_name": "Post"
+          },
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "locator(\"xpath=html/body/div/div[1]/div[2]/div[2]/div/div[1]/div/div[3]/div[8]/div/div[3]/div[1]/div\")",
+          "prompt_instructions": "Click the heart icon (Like button) at index 3532 to like Sania Shaheen's post.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "div",
+            "attributes": {}
+          },
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "locator(\"button.oxd-icon-button\", has_text=\"\uf266\")",
+          "prompt_instructions": "Click the comment icon (speech-bubble) at index 3534 for Sania Shaheen's post to reveal the comment input field.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "button",
+            "attributes": {
+              "type": "button"
+            },
+            "ax_name": "\uf266"
+          },
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "input_text": {
+          "command": "get_by_placeholder(\"Write your comment...\")",
+          "prompt_instructions": "Type 'Nice post!' into the comment input field and press Enter to submit the comment.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "input",
+            "attributes": {
+              "placeholder": "Write your comment..."
+            },
+            "ax_name": "Write your comment..."
+          },
+          "input_text": "Nice post!",
+          "is_slider": false,
+          "fill_or_type": "fill",
+          "press_enter": false,
+          "click_before_input": true
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    }
+  ],
+  "automation_description": "Deterministic cache compiled from a browser-use agentic run.",
+  "post_processing_nodes": []
+}

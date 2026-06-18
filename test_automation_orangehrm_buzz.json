@@ -1,0 +1,19 @@
+{
+  "url": "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login",
+  "parameters": {
+    "input_parameters": {},
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "agentic_task": {
+          "task": "Log in to OrangeHRM using username 'Admin' and password 'admin123' and click the Login button. After logging in, open the 'Buzz' module from the left sidebar menu. First, create a new post: type 'Hello from the team!' into the 'What's on your mind?' post box at the top and click the Post button. Next, find an existing post in the feed by another author. Click the LIKE icon (the small heart icon in the row of icons directly below that post) to like it. Then click the COMMENT icon (the speech-bubble icon next to the heart) to reveal that post's comment input, type 'Nice post!' into the comment input that appears under the post, and press Enter to submit the comment. Important: do NOT click the Share icon and do NOT open the Share Post modal — use only the heart (like) and the speech-bubble (comment) icons that belong to the post.",
+          "max_steps": 20,
+          "backend": "browser_use"
+        }
+      }
+    }
+  ]
+}
