@@ -101,17 +101,32 @@ def _relaxed_attr_command(element: dict) -> dict | None:
     return None
 
 
+# Locator kinds anchored on visible text — unstable when that text is dynamic.
+_TEXT_KINDS = {"text", "role+text", "css+text"}
+
+
 def synthesize_command(element: dict) -> dict | None:
     """The single best deterministic locator command for a trace element, or ``None`` if
     the element exposes nothing stable enough to locate on. Returns
     ``{"command", "kind", "score"}``.
 
-    Prefers the engine's own ranking; only when that yields nothing better than a
-    positional xpath do we fall back to a relaxed name/id selector (more robust to layout
-    changes than xpath, and known-good since it resolved at capture time).
+    Prefers the engine's own ranking, with two cache-specific adjustments:
+    - **Demote dynamic text**: the engine's scorer ranks a visible-text locator above
+      xpath but doesn't check whether that text is dynamic. For a cached locator that's a
+      trap (e.g. a download link whose text is a random filename), so if the top pick is
+      text-based and the text looks dynamic we fall through to the positional xpath.
+    - **Relaxed name/id**: when nothing better than xpath survives, re-admit a
+      hand-authored name/id (more robust to layout changes, and known-good at capture).
     """
     candidates = ranked_commands(element)
     best = candidates[0] if candidates else None
+
+    text = (element.get("ax_name") or "").strip()
+    if best and best["kind"] in _TEXT_KINDS and text and LocatorExtraction._looks_dynamic(text):
+        xpath = next((c for c in candidates if c["kind"] == "xpath"), None)
+        if xpath is not None:
+            best = xpath
+
     if best is None or best["kind"] == "xpath":
         relaxed = _relaxed_attr_command(element)
         if relaxed is not None:

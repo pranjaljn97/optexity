@@ -81,6 +81,21 @@ def test_genuine_hash_still_falls_to_xpath():
     assert "xpath=" in synthesize_command(el)["command"]
 
 
+def test_dynamic_text_link_prefers_xpath_over_text():
+    # A download link whose only signals are a random filename (href/text). A text locator
+    # would go stale every visit, so the cache should fall through to the positional xpath.
+    el = {"node_name": "A", "attributes": {"href": "download/tmpu521hwte.txt"},
+          "ax_name": "tmpu521hwte.txt", "x_path": "/html/body/div/a[1]"}
+    cmd = synthesize_command(el)
+    assert "xpath=" in cmd["command"] and "tmpu521hwte" not in cmd["command"]
+
+
+def test_stable_text_link_still_uses_text():
+    # Non-dynamic visible text is fine to anchor on.
+    el = {"node_name": "A", "attributes": {}, "ax_name": "Download", "x_path": "/html/body/a"}
+    assert synthesize_command(el)["command"].startswith("get_by_text(")
+
+
 def test_ranked_commands_are_sorted_best_first():
     el = {"node_name": "INPUT", "attributes": {"id": "x", "name": "y"},
           "ax_name": None, "x_path": "/p"}

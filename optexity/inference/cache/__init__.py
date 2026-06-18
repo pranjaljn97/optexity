@@ -1,7 +1,7 @@
 """Learning cache: compile a browser-use agentic trace into a deterministic optexity
 automation so subsequent runs skip LLM reasoning.
 
-Pipeline:  trace.json  ->  collapse_trace  ->  build_automation  ->  test_automation_cached.json
+Pipeline:  trace.json  ->  collapse_trace  ->  build_automation  ->  <task>_cached.json
 
 The trace is produced by the browser-use fork
 (``AgentHistoryList.export_deterministic_trace``); the synth/redundancy/render stages live

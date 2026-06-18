@@ -1,5 +1,5 @@
 {
-  "url": "https://www.africau.edu/images/default/sample.pdf",
+  "url": "https://the-internet.herokuapp.com/download",
   "expected_downloads": 1,
   "parameters": {
     "input_parameters": {},
@@ -10,8 +10,8 @@
       "type": "action_node",
       "interaction_action": {
         "agentic_task": {
-          "task": "find the link to the sample PDF file and click it to download the file",
-          "max_steps": 10,
+          "task": "click the first downloadable file link in the list to download it",
+          "max_steps": 8,
           "backend": "browser_use"
         }
       }

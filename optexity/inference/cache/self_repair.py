@@ -12,8 +12,9 @@ toggles off (the default) those hooks short-circuit and behavior is unchanged.
   an element, write its fresh locator + fingerprint back into the node and persist the
   repaired automation, so the cache stops re-paying the LLM for that step.
 
-Toggle via env: OPTEXITY_CACHE_VERIFY=1, OPTEXITY_CACHE_HEAL=1,
-OPTEXITY_CACHE_HEAL_PATH=<file> (default test_automation_cached.json).
+Toggle via env: OPTEXITY_CACHE_VERIFY=1, OPTEXITY_CACHE_HEAL=1, OPTEXITY_CACHE_SERVE=1.
+Cache entries are keyed per endpoint under OPTEXITY_CACHE_DIR (default ``optexity_cache``);
+set OPTEXITY_CACHE_HEAL_PATH to force a single shared file instead.
 """
 
 from __future__ import annotations

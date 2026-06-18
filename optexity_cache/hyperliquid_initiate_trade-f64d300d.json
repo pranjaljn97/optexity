@@ -1,0 +1,229 @@
+{
+  "browser_channel": "chromium",
+  "backend": "browser-use",
+  "allow_cookies": false,
+  "max_retries": 0,
+  "expected_downloads": 0,
+  "remove_empty_nodes_in_axtree": true,
+  "url": "https://app.hyperliquid.xyz/trade/xyz:SP500",
+  "take_final_screenshot": true,
+  "parameters": {
+    "input_parameters": {
+      "asset_search_query": [
+        "ama"
+      ],
+      "leverage_multiplier": [
+        "20x"
+      ]
+    },
+    "secure_parameters": {},
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"link\", name=\"Trade\")",
+          "prompt_instructions": "Click the 'Trade' link in the navigation menu.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0,
+      "localized_axtree_string": "None"
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "locator(\"xpath=html/body/div/div[3]/div[2]/div/div[1]/div/div[2]\")",
+          "prompt_instructions": "Click on the currently selected asset ('S&P500-USDC') to open the asset search bar.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "div",
+            "attributes": {}
+          },
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0,
+      "localized_axtree_string": "None"
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "input_text": {
+          "command": "get_by_role(\"textbox\", name=\"Search\")",
+          "prompt_instructions": "Enter the asset you want to search for, 'ama', into the search field.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "input_text": "ama",
+          "is_slider": false,
+          "fill_or_type": "fill",
+          "press_enter": false,
+          "click_before_input": true
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0,
+      "localized_axtree_string": "None"
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_text(\"AMZN-USDC20xxyz\")",
+          "prompt_instructions": "From the search results, select the asset corresponding to your search for '{asset_search_query[0]}'.",
+          "skip_command": true,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0,
+      "localized_axtree_string": "None"
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"{leverage_multiplier[0]}\")",
+          "prompt_instructions": "Click on the button to set the trade leverage to '{leverage_multiplier[0]}'.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0,
+      "localized_axtree_string": "None"
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "locator(\"div:nth-child(3) > .sc-cUEOzv\")",
+          "prompt_instructions": "Click on the order type or trade action button (e.g., Buy/Long).",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0,
+      "localized_axtree_string": "None"
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "locator(\".sc-fEXmlR > .sc-cjibBx > .sc-cabOPr\")",
+          "prompt_instructions": "Click the button to place the order.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0,
+      "localized_axtree_string": "None"
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Establish Connection\")",
+          "prompt_instructions": "Click the 'Establish Connection' button to connect your wallet.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0,
+      "localized_axtree_string": "None"
+    }
+  ],
+  "post_processing_nodes": []
+}

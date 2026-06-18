@@ -1,0 +1,48 @@
+{
+  "browser_channel": "chromium",
+  "backend": "browser-use",
+  "allow_cookies": false,
+  "max_retries": 0,
+  "expected_downloads": 0,
+  "remove_empty_nodes_in_axtree": true,
+  "url": "https://the-internet.herokuapp.com/download",
+  "take_final_screenshot": true,
+  "parameters": {
+    "input_parameters": {},
+    "secure_parameters": {},
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "locator(\"xpath=html/body/div[2]/div/div/a[1]\")",
+          "prompt_instructions": "Click the first downloadable file link 'tmpu521hwte.txt' at index 72.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "a",
+            "attributes": {},
+            "ax_name": "tmpu521hwte.txt"
+          },
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    }
+  ],
+  "automation_description": "Deterministic cache compiled from a browser-use agentic run.",
+  "post_processing_nodes": []
+}

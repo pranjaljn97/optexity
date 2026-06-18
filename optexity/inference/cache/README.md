@@ -118,8 +118,9 @@ optexity inference --host 127.0.0.1 --port 9000
 python -m optexity.inference.cache.cli compile \
     --logs /tmp/optexity/<task_id>/logs \
     --url https://example.com/form \
-    --out test_automation_cached.json
+    --out output/<task>_cached.json
 #   (or --trace <a single step_*/trace.json>)
+# Compiled deterministic outputs per task live in ../../../output/ (see output/README.md).
 
 # Measure a run's tokens / fallbacks / wall-clock
 python -m optexity.inference.cache.cli metrics --logs /tmp/optexity/<task_id>/logs

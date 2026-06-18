@@ -1,0 +1,478 @@
+{
+  "browser_channel": "chromium",
+  "backend": "browser-use",
+  "allow_cookies": false,
+  "max_retries": 0,
+  "expected_downloads": 0,
+  "remove_empty_nodes_in_axtree": true,
+  "url": "https://www.google.com/travel/flights?gl=IN&hl=en",
+  "take_final_screenshot": true,
+  "parameters": {
+    "input_parameters": {
+      "return_date": [
+        "Friday, August 28, 2026"
+      ],
+      "airline_name": [
+        "Air India"
+      ],
+      "seating_class": [
+        "Business"
+      ],
+      "departure_date": [
+        "Wednesday, August 5, 2026"
+      ],
+      "destination_full_name": [
+        "San Francisco, California, USA"
+      ],
+      "destination_search_query": [
+        "sa"
+      ]
+    },
+    "secure_parameters": {},
+    "generated_parameters": {}
+  },
+  "nodes": [
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"combobox\", name=\"Where to?\")",
+          "prompt_instructions": "Click on the destination input field labeled 'Where to?'.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "input_text": {
+          "command": "get_by_label(\"Where to?\")",
+          "prompt_instructions": "Type the destination search query 'sa' into the text field.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "fingerprint": {
+            "tag": "input",
+            "attributes": {
+              "aria-label": "Where to? ",
+              "type": "text",
+              "role": "combobox"
+            },
+            "ax_name": "Where to? "
+          },
+          "input_text": "sa",
+          "is_slider": false,
+          "fill_or_type": "fill",
+          "press_enter": false,
+          "click_before_input": true
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_text(\"San Francisco, California, USA\")",
+          "prompt_instructions": "Select the destination 'San Francisco, California, USA' from the suggestion list.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"combobox\", name=\"Change seating class. Economy\").locator(\"div\")",
+          "prompt_instructions": "Click on the seating class dropdown menu.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"option\", name=\"Business\")",
+          "prompt_instructions": "Select 'Business' from the seating class options.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"textbox\", name=\"Departure\")",
+          "prompt_instructions": "Click on the 'Departure' date field to open the calendar.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Next\")",
+          "prompt_instructions": "Click the 'Next' button to navigate to the correct month in the calendar.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Wednesday, August 5, 2026 ,\")",
+          "prompt_instructions": "Select the departure date: 'Wednesday, August 5, 2026'.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Friday, August 28, 2026 ,\")",
+          "prompt_instructions": "Select the return date: 'Friday, August 28, 2026'.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Done. Search for round trip\")",
+          "prompt_instructions": "Click the 'Done' button to confirm the date selection.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Search\")",
+          "prompt_instructions": "Click the 'Search' button to find flights.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Airlines, Not selected\")",
+          "prompt_instructions": "Click on the 'Airlines' filter button.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_label(\"Air India only\")",
+          "prompt_instructions": "Select the checkbox for 'Air India' to filter by this airline.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Close dialog\")",
+          "prompt_instructions": "Click the close button to apply the airline filter.",
+          "skip_command": false,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Flight details. Leaves Kempegowda International Airport Bengaluru at 6:20 PM on\")",
+          "prompt_instructions": "From the list of search results, click on the desired outbound flight to see its details.",
+          "skip_command": true,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Select flight\")",
+          "prompt_instructions": "Click the 'Select flight' button to confirm your choice of outbound flight.",
+          "skip_command": true,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Flight details. Leaves San Francisco International Airport at 10:30 AM on Friday, August 28 and arrives at Kempegowda International Airport Bengaluru at 3:10 AM on Sunday, August 30.\", exact=True)",
+          "prompt_instructions": "From the list of return flights, click on the desired option to see its details.",
+          "skip_command": true,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    },
+    {
+      "type": "action_node",
+      "interaction_action": {
+        "max_tries": 10,
+        "max_timeout_seconds_per_try": 1.0,
+        "verify_before_step": true,
+        "click_element": {
+          "command": "get_by_role(\"button\", name=\"Select flight\")",
+          "prompt_instructions": "Click the 'Select flight' button to confirm your choice of return flight.",
+          "skip_command": true,
+          "skip_prompt": false,
+          "assert_locator_presence": false,
+          "double_click": false,
+          "expect_download": false,
+          "button": "left",
+          "mouse_click": false,
+          "force": false
+        }
+      },
+      "before_sleep_time": 0.0,
+      "end_sleep_time": 5.0,
+      "expect_new_tab": false,
+      "max_new_tab_wait_time": 0.0
+    }
+  ],
+  "post_processing_nodes": []
+}
