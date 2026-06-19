@@ -14,22 +14,30 @@ unless you enable it.
 
 ## The loop
 
+```mermaid
+flowchart TB
+  A["Trigger (dashboard / API /inference)"] --> B["Optexity worker<br/>child_process.py"]
+  B --> C{"Cache serve?<br/>(OPTEXITY_CACHE_SERVE +<br/>entry for endpoint)"}
+  C -- "hit" --> D[("optexity_cache/&lt;endpoint&gt;.json<br/>deterministic automation")]
+  C -- "miss / first run" --> E["server or agentic automation"]
+  D --> F["run_automation.py<br/>→ per-node handlers"]
+  E --> F
+  F --> G{"node type"}
+  G -- "agentic_task" --> H["browser-use Agent<br/>AXTree → LLM picks element<br/>(spends tokens)"]
+  G -- "deterministic command" --> K["handle_command.py"]
+  H --> I["export_deterministic_trace()<br/>(browser-use fork) → trace.json"]
+  I --> J["compile_trace()<br/>redundancy → locator_synth → renderer"]
+  J -- "persist, keyed by endpoint" --> D
+  K --> L{"VERIFY<br/>fingerprint matches<br/>live element?"}
+  L -- "yes" --> M["eval('page.' + command)<br/>act — 0 LLM tokens"]
+  L -- "no / not found" --> N["fallback → LLM<br/>command_fallback_count++"]
+  N --> O["record_heal()<br/>rewrite command + fingerprint"]
+  O -- "re-persist" --> D
 ```
-                ┌──────────────────────────────────────────────────────────────┐
-                │                                                                │
- server/agentic ─run─▶ engine ─agentic node─▶ browser-use ─▶ agent.history       │
-   automation          │                          │                             │
-        ▲              │                  export_deterministic_trace()  (capture)│
-        │              ▼                          ▼                              │
-  serve cached   verify fingerprint        trace.json ──▶ compile_trace          │
-  (CACHE_SERVE)  before each cached         (collapse noise → locators →         │
-        │        action (CACHE_VERIFY)       fingerprints → validated Automation)│
-        │              │                          │                              │
-        │       mismatch/fail ─▶ LLM fallback ─▶ record_heal (CACHE_HEAL)        │
-        │                                          │                             │
-        └─────────── persist (keyed by endpoint) ◀─┘                             │
-                     optexity_cache/<endpoint>.json ───────────────────────────┘
-```
+
+The **right branch** (`H→I→J→D`) is *learning* (agentic → capture → compile → cache); the
+**left branch** (`K→L→M`) is *deterministic replay* at 0 tokens, with `L→N→O` the *self-repair*
+when a locator drifts.
 
 1. **Capture** — after an agentic run, `AgentHistoryList.export_deterministic_trace()` (in the
    browser-use fork) dumps each action + the DOM element it touched (xpath / attributes /
@@ -100,38 +108,55 @@ hundred KB. `load_cached_automation(endpoint_name)` reads an entry back.
 
 ---
 
-## Usage
+## How to run & reproduce
+
+The deterministic automations per task and the measured token table
+(e.g. roboform 25,339 → 0, OrangeHRM Buzz 99,356 → 6,900) are committed in
+[`output/`](../../../output/README.md) — no setup needed.
+
+**Compiler:**
 
 ```bash
-# 1. env (engine + Gemini for the agentic capture; see .env.example)
-cp .env.example .env && export ENV_PATH=$PWD/.env     # fill in keys
-
-# 2. enable the cache (opt-in)
-export OPTEXITY_CACHE_VERIFY=1 OPTEXITY_CACHE_HEAL=1 OPTEXITY_CACHE_SERVE=1
-
-# 3. run the worker; trigger an endpoint (dashboard, or POST the worker's /inference).
-#    run 1: agent reasons -> trace captured -> compiled + cached (keyed by endpoint)
-#    run 2+: served from cache -> deterministic replay (0 LLM tokens); drift self-heals.
-optexity inference --host 127.0.0.1 --port 9000
-
-# Offline: compile a captured trace into a deterministic automation (no browser/keys)
-python -m optexity.inference.cache.cli compile \
-    --logs /tmp/optexity/<task_id>/logs \
-    --url https://example.com/form \
-    --out output/<task>_cached.json
-#   (or --trace <a single step_*/trace.json>)
-# Compiled deterministic outputs per task live in ../../../output/ (see output/README.md).
-
-# Measure a run's tokens / fallbacks / wall-clock
-python -m optexity.inference.cache.cli metrics --logs /tmp/optexity/<task_id>/logs
-
-# Dev: iterate against a local fixture instead of real endpoints
-export OPTEXITY_TEST_AUTOMATION=test_automation.json
+OPTEXITY_API_KEY=local-dev DEPLOYMENT=dev pytest tests/test_cache.py tests/test_self_repair.py
 ```
+Covers locator synthesis & precedence, redundancy collapse, schema-valid rendering, fingerprint
+matching, heal-on-fallback, per-endpoint keying (100 endpoints → 100 files), the serve path, and
+the `serialize_axtree` compatibility shim.
+
+**Reproduce caching** (needs an Optexity API key, one recorded automation whose
+`endpoint_name` is just a trigger handle, and a Gemini `GOOGLE_API_KEY`):
+
+```bash
+# install order matters: optexity first, browser-use fork LAST so it isn't shadowed
+pip install -e ./optexity && pip install -e ./browser-use
+python -c "import browser_use,os; print(os.path.realpath(browser_use.__file__))"  # must be the fork src
+python -m playwright install chromium chrome && python -m patchright install chromium chrome
+cp optexity/.env.example optexity/.env && export ENV_PATH=$PWD/optexity/.env       # fill in keys
+
+# (A) AGENTIC run — serve a seed via the dev override, trigger, read tokens
+OPTEXITY_TEST_AUTOMATION=test_automation.json optexity inference --host 127.0.0.1 --port 9000 &
+curl -sX POST http://127.0.0.1:9000/inference -H 'Content-Type: application/json' \
+  -d '{"endpoint_name":"<your-endpoint>","input_parameters":{<its params>}}'
+python -m optexity.inference.cache.cli metrics --logs /tmp/optexity/<task_id>/logs   # ~25k tokens
+
+# (B) COMPILE the captured trace → a deterministic automation
+python -m optexity.inference.cache.cli compile --logs /tmp/optexity/<task_id>/logs \
+  --url https://www.roboform.com/filling-test-all-fields --out output/roboform_cached.json
+
+# (C) CACHED replay — serve the compiled file, trigger again, compare tokens
+OPTEXITY_TEST_AUTOMATION=output/roboform_cached.json optexity inference --port 9000 &
+curl -sX POST http://127.0.0.1:9000/inference -H 'Content-Type: application/json' \
+  -d '{"endpoint_name":"<your-endpoint>","input_parameters":{<its params>}}'
+python -m optexity.inference.cache.cli metrics --logs /tmp/optexity/<new_task_id>/logs  # 0 tokens
+```
+
+What runs is decided by precedence: **dev override (`OPTEXITY_TEST_AUTOMATION`) → served cache
+(`OPTEXITY_CACHE_SERVE`) → real server automation**. Dynamic pages may show a few fallbacks on
+replay — that's the hybrid `command`→LLM path working, not a failure.
 
 ---
 
-## Where the token savings come from
+## Token savings on subsequent runs
 
 A deterministic node runs via `eval("page." + command)` — **no DOM goes to an LLM, 0 tokens**.
 Tokens are spent only on (a) agentic reasoning and (b) per-step LLM fallback when a `command`
@@ -144,14 +169,3 @@ fails. So **tokens per run ∝ steps that needed the LLM**, and the cache drives
 
 `OPTEXITY_CACHE_SERVE` is what realizes the saving — without it the cache is written but never
 read back, so deterministic replay never happens.
-
----
-
-## Tests
-
-```bash
-OPTEXITY_API_KEY=local-dev DEPLOYMENT=dev pytest tests/test_cache.py tests/test_self_repair.py
-```
-Covers locator synthesis & precedence, redundancy collapse, schema-valid rendering,
-fingerprint matching, heal-on-fallback, per-endpoint keying (100 endpoints → 100 files),
-the serve path, and the `serialize_axtree` compatibility shim.
